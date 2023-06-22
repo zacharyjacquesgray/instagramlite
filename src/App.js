@@ -12,7 +12,7 @@ function App() {
         <div>
           <SearchBar />
           <br></br>
-          <SearchResults />
+          <SearchResults username="blackpink" />
         </div>
         </header>
     </div>

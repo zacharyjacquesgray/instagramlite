@@ -1,36 +1,34 @@
-import axios from 'axios';
 import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 
 // Information to reach API
-const baseUrl = 'https://www.instagram.com/';
-const queryParams = '/?__a=1&__d=dis';
+const baseUrl = 'http://localhost:3000'; // Update with your server's URL
+const endpoint = baseUrl + '/';
 
 const SearchResults = ({ username }) => {
-    const endpoint = baseUrl + username + queryParams;
-    const [displayData, setDisplayData] = useState({ data: "No data" });
-    const [isLoading, setIsLoading] = useState(true);
+  const [displayData, setDisplayData] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
 
-    useEffect(() => {
-        const getResults = async () => {
-            try {
-                const response = await fetch(endpoint);
-                if (response.ok) {
-                    const jsonResponse = await response.json();
-                    setDisplayData(jsonResponse);
-                }
-            } catch (error) {
-                console.log(error);
-            } finally {
-                setIsLoading(false);
-            }
-        };
-    }, []);
+  useEffect(() => {
+    const getResults = async () => {
+      try {
+        const response = await axios.get(`${endpoint}${username}`);
+        setDisplayData(response.data);
+      } catch (error) {
+        console.log(error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
 
-    if (isLoading) {
-        return <p>Loading {username}...</p>
-    }
+    getResults();
+  }, [username]);
 
-    return <p>{JSON.stringify(displayData)}</p>
-}
+  if (isLoading) {
+    return <p>Loading {username}...</p>;
+  }
+
+  return <p>{JSON.stringify(displayData, null, 2)}</p>;
+};
 
 export default SearchResults;

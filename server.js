@@ -7,9 +7,11 @@ const port = 3000;
 
 app.use(cors());
 
-app.get('/', async (req, res) => {
+app.get('/:username', async (req, res) => {
+  const { username } = req.params;
+
   try {
-    const response = await axios.get('https://www.instagram.com/blackpink/?__a=1&__d=dis');
+    const response = await axios.get(`https://www.instagram.com/${username}/?__a=1&__d=dis`);
     const data = response.data;
     res.json(data);
   } catch (error) {
