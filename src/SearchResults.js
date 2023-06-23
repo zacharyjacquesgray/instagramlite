@@ -16,7 +16,7 @@ const SearchResults = ({ username }) => {
       try {
         const response = await axios.get(`${endpoint}${username}`);
         setDisplayData(response.data);
-        setImageUrl(`${baseUrl}/${username}/image`); // Set the imageUrl from the response data
+        setImageUrl(`${baseUrl}/${username}/`); // Set the imageUrl from the response data
       } catch (error) {
         console.log(error);
       } finally {
@@ -43,9 +43,13 @@ const SearchResults = ({ username }) => {
         <img key={index} src={`${imageUrl}${index}`} alt={`${username} recent`} />
       ))}
 
-      <pre>{JSON.stringify(displayData, null, 2)}</pre>
+      
     </div>
   );
 };
 
 export default SearchResults;
+
+
+// use this code to display JSON if needed:
+// <pre>{JSON.stringify(displayData, null, 2)}</pre>
