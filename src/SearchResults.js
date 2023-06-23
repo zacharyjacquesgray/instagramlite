@@ -39,7 +39,7 @@ const SearchResults = ({ username }) => {
     <div>
       <ImageParser json={JSON.stringify(displayData)} />
 
-      <img src={imageUrl} alt="Instagram Image" />
+      <img src={imageUrl} alt={username + " recent"} />
 
       <h3>{displayData.data.graphql.user.edge_owner_to_timeline_media.edges[0].node.display_url}</h3>
       <h3>{displayData.data.graphql.user.edge_owner_to_timeline_media.edges[1].node.display_url}</h3>
