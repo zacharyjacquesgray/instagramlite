@@ -8,6 +8,8 @@ const port = 3000;
 
 app.use(cors());
 
+let emilyWillis = null;
+
 app.get('/:username', async (req, res) => {
   const { username } = req.params;
 
@@ -24,6 +26,12 @@ app.get('/:username', async (req, res) => {
       data: data,
     };
 
+    
+    console.log(responseObject.data.graphql.user.edge_owner_to_timeline_media.edges[0].node.display_url); // I want to pass this as the pathway to the URL
+
+    emilyWillis = responseObject.data.graphql.user.edge_owner_to_timeline_media.edges[0].node.display_url;
+    console.log("Image URL:   " + emilyWillis)
+
     res.json(responseObject);
   } catch (error) {
     console.error('Error:', error);
@@ -32,12 +40,15 @@ app.get('/:username', async (req, res) => {
 });
 
 app.get('/:username/image', (req, res) => {
-  const imageUrl = 'https://instagram.fsyd3-1.fna.fbcdn.net/v/t51.2885-15/355228759_776809164177900_9199623976963649295_n.jpg?stp=dst-jpg_e35_p1080x1080&_nc_ht=instagram.fsyd3-1.fna.fbcdn.net&_nc_cat=1&_nc_ohc=7tDIStHkRMgAX84RVH5&edm=AKEQFekBAAAA&ccb=7-5&oh=00_AfDkTP2rGdud3HqDLu2diIvKMcLNKmD8dLMGEty0lhSwBA&oe=649B21F2&_nc_sid=1349e3';
+  const imageUrl = 'https://instagram.fsyd3-1.fna.fbcdn.net/v/t51.2885-15/273425399_461846525648315_849094583189862936_n.jpg?stp=dst-jpg_e35_s1080x1080&_nc_ht=instagram.fsyd3-1.fna.fbcdn.net&_nc_cat=111&_nc_ohc=n3m4qjj8aOMAX-hcj55&edm=AKEQFekBAAAA&ccb=7-5&oh=00_AfDUwXvSUco4zPW-qsRCU1rLrYHw0Fwv8TT89NgKwnd6dg&oe=649AFFCC&_nc_sid=1349e3';
+  // I want to replace this with the URL found under responseObject.data.graphql.user.edge_owner_to_timeline_media.edges[0].node.display_url
+
+
 
   // Proxy the image request to the external URL
   axios({
     method: 'get',
-    url: imageUrl,
+    url: emilyWillis,
     responseType: 'stream',
   })
     .then((response) => {
