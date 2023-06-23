@@ -1,11 +1,11 @@
 import React from 'react';
 
-const SearchBar = () => {
+const SearchBar = ({ searchTitle="Search..." }) => {
 
 
     return (
         <div>
-            <input placeholder="Search Spotify" />
+            <input placeholder={searchTitle} />
         </div>
     )
 }
