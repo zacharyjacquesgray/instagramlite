@@ -4,7 +4,6 @@ import ImageParser from './ImageParser';
 
 const baseUrl = 'http://localhost:3000'; // Server URL
 const endpoint = baseUrl + '/';
-const mediaJson = '';
 
 const SearchResults = ({ username }) => {
   const [displayData, setDisplayData] = useState(null);
@@ -13,7 +12,7 @@ const SearchResults = ({ username }) => {
 
   useEffect(() => {
     const getResults = async () => {
-    setIsLoading(true) // Show loading page
+      setIsLoading(true) // Show loading page
       try {
         const response = await axios.get(`${endpoint}${username}`);
         setDisplayData(response.data);
@@ -40,12 +39,10 @@ const SearchResults = ({ username }) => {
     <div>
       <ImageParser json={JSON.stringify(displayData)} />
 
-      <img src={imageUrl} alt={username + " recent"} />
+      {Array.from({ length: 10 }, (_, index) => (
+        <img key={index} src={`${imageUrl}${index}`} alt={`${username} recent`} />
+      ))}
 
-      <h3>{displayData.data.graphql.user.edge_owner_to_timeline_media.edges[0].node.display_url}</h3>
-      <h3>{displayData.data.graphql.user.edge_owner_to_timeline_media.edges[1].node.display_url}</h3>
-      <h3>{displayData.data.graphql.user.edge_owner_to_timeline_media.edges[2].node.display_url}</h3>
-      <h4>{imageUrl}</h4>
       <pre>{JSON.stringify(displayData, null, 2)}</pre>
     </div>
   );

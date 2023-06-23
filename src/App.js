@@ -1,4 +1,3 @@
-import logo from './logo.svg';
 import './App.css';
 import HeaderBar from './HeaderBar';
 import SearchBar from './SearchBar';
