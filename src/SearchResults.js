@@ -13,6 +13,7 @@ const SearchResults = ({ username }) => {
 
   useEffect(() => {
     const getResults = async () => {
+    setIsLoading(true) // Show loading page
       try {
         const response = await axios.get(`${endpoint}${username}`);
         setDisplayData(response.data);

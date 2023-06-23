@@ -6,14 +6,22 @@ import SearchResults from './SearchResults';
 import React, { useState } from 'react';
 
 function App() {
-  const [username, setUsername] = useState("jennierubyjane")
+  const [username, setUsername] = useState('jennierubyjane');
+
+  const handleUsername = (usernameSearch) => {
+    console.log('Search user: ' + usernameSearch);
+    setUsername(usernameSearch);
+  }
 
   return (
     <div className='App'>
       <header className='App-header' >
-        <HeaderBar title='Load test' />
+        <HeaderBar title='Instagram Lite' />
         <div>
-          <SearchBar searchTitle="@ username" />
+          <SearchBar 
+            onSearch={handleUsername}
+            searchTitle='Search username'
+          />
           <br></br>
           <SearchResults username={username} />
         </div>
