@@ -5,13 +5,15 @@ const SearchBar = ({ onSearch, searchTitle = "Search..." }) => {
 
     const handleSearch = (e) => {
         e.preventDefault(); // Prevent form submission
-        onSearch(searchTerm);
+        const filteredSearch = searchTerm.split('').filter(char => /[a-zA-Z0-9._]/.test(char)).join('');
+        onSearch(filteredSearch);
     }
 
     const handleInputChange = (e) => {
         setSearchTerm(e.target.value);
     }
 
+    // Add this to .css file later
     const BarStyling = { width: "20rem", background: "#F2F1F9", border: "none", padding: "0.5rem" };
     const ButtonStyling = { background: "#F2F1F9", border: "none", padding: "0.5rem" };
     

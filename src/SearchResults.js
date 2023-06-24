@@ -30,14 +30,6 @@ const SearchResults = ({ username }) => {
     getResults();
   }, [username]);
 
-  const fetchImage = async (url) => {
-    try {
-      await axios.get(`${endpoint}${username}/${encodeURIComponent(url)}`);
-    } catch (error) {
-      console.error('Error:', error);
-    }
-  };
-
   if (isLoading) {
     return <p>Loading {username}...</p>;
   }
