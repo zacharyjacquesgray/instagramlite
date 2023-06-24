@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import ImageParser from './ImageParser';
 import ResultsHeader from './results/ResultsHeader';
 import ResultsFooter from './results/ResultsFooter';
 import ResultsDivider from './results/ResultsDivider';
@@ -49,8 +48,6 @@ const SearchResults = ({ username }) => {
 
   return (
     <div>
-      <ImageParser json={JSON.stringify(displayData)} />
-
       {imageUrls.map((imageUrl, index) => (
         <div key={index}>
           <ResultsHeader userHeader={username} />

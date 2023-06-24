@@ -1,7 +1,7 @@
 import './App.css';
 import HeaderBar from './HeaderBar';
 import SearchBar from './SearchBar';
-import SearchResults from './SearchResults';
+import UserResults from './UserResults';
 import React, { useState } from 'react';
 
 function App() {
@@ -22,7 +22,7 @@ function App() {
             searchTitle='Search username'
           />
           <br></br>
-          <SearchResults username={username} />
+          <UserResults username={username}/>
         </div>
         </header>
     </div>
