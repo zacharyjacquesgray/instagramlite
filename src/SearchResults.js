@@ -34,8 +34,9 @@ const SearchResults = ({ username }) => {
     return <p>Loading {username}...</p>;
   }
 
+  // Need to send this data back to user results to remove from array.
   if (!displayData || !displayData.data || !displayData.data.graphql || !displayData.data.graphql.user) {
-    return <p>No data available</p>;
+    console.log('No data available for ' + username);
   }
 
   return (

@@ -26,6 +26,7 @@ app.get('/:username', async (req, res) => {
     let data = null;
     let responseObject = null;
     let searchUrl = instagramUrl + urlParams;
+    const userUrl = [];
 
     do {
       console.log(searchUrl);
@@ -36,10 +37,26 @@ app.get('/:username', async (req, res) => {
       i++;
     } while (i < 1);
 
-    const userUrl = [];
+    // Go through and find all main posts
+    for (let num of data.graphql.user.edge_owner_to_timeline_media.edges) {
+      userUrl.push(num.node.display_url); // The main images are a part of the carousel
 
-    for (let node of data.graphql.user.edge_owner_to_timeline_media.edges) {
-      userUrl.push(node.node.display_url);
+      // Make an object to hold each of the carousel images. This way they can be displayed together.
+
+      // Go through and find all carousel images
+      if (
+        num.node.edge_sidecar_to_children &&
+        num.node.edge_sidecar_to_children.edges &&
+        num.node.edge_sidecar_to_children.edges.length > 0
+      ) {
+        for (let sidecar of num.node.edge_sidecar_to_children.edges) {
+          if (sidecar.node.display_url !== num.node.display_url) {
+            userUrl.push(sidecar.node.display_url);
+          }
+        }
+      }
+      
+
     }
 
     responseObject = {

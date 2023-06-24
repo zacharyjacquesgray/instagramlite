@@ -5,7 +5,7 @@ const SearchBar = ({ onSearch, searchTitle = "Search..." }) => {
 
     const handleSearch = (e) => {
         e.preventDefault(); // Prevent form submission
-        const filteredSearch = searchTerm.split('').filter(char => /[a-zA-Z0-9._]/.test(char)).join('');
+        const filteredSearch = searchTerm.split('').filter(char => /[a-zA-Z0-9._]/.test(char)).join('').toLowerCase();
         onSearch(filteredSearch);
     }
 
