@@ -15,7 +15,7 @@ function App() {
   return (
     <div className='App'>
       <header className='App-header' >
-        <HeaderBar title='Instagram Lite' />
+        <HeaderBar />
         <div>
           <SearchBar 
             onSearch={handleUsername}

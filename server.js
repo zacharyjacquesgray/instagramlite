@@ -2,34 +2,50 @@ const express = require('express');
 const axios = require('axios');
 const cors = require('cors');
 const fs = require('fs');
+const path = require('path');
 
 const app = express();
 const port = 3000;
 
-app.use(cors());
+const saveImagesLocally = false; // Adjust if you want a session where files are saved locally.
 
-let userUrl = [];
-let userId = '';
+app.use(cors());
 
 app.get('/:username', async (req, res) => {
   const { username } = req.params;
   const baseUrl = 'http://localhost:3000'; // Server URL
+  let moreImagesKey = '';
 
   try {
-    const response = await axios.get(`https://www.instagram.com/${username}/?__a=1&__d=dis`);
-    const data = response.data;
+    const instagramUrl = `https://www.instagram.com/${username}/?__a=1`;
+    const urlParams = '&__d=dis';
+    const endCursorParam = '&max_id=';
 
-    const responseObject = {
-      data: data,
-    };
+    let i = 0;
+    let response = null;
+    let data = null;
+    let responseObject = null;
+    let searchUrl = instagramUrl + urlParams;
 
-    userUrl = [];
-    userId = username; // for storing images locally organised by username
+    do {
+      console.log(searchUrl);
+      response = await axios.get(searchUrl);
+      data = response.data;
+      moreImagesKey = data.graphql.user.edge_owner_to_timeline_media.page_info.end_cursor;
+      searchUrl = instagramUrl + endCursorParam + moreImagesKey + urlParams;
+      i++;
+    } while (i < 1);
 
-    for (let node = 0; node < 10; node++) {
-      userUrl.push(responseObject.data.graphql.user.edge_owner_to_timeline_media.edges[node].node.display_url);
+    const userUrl = [];
+
+    for (let node of data.graphql.user.edge_owner_to_timeline_media.edges) {
+      userUrl.push(node.node.display_url);
     }
-    //console.log(responseObject.imageUrl)
+
+    responseObject = {
+      data: data,
+      imageUrl: userUrl,
+    };
 
     res.json(responseObject);
   } catch (error) {
@@ -38,44 +54,47 @@ app.get('/:username', async (req, res) => {
   }
 });
 
-for (let posts = 0; posts < 10; posts++) {
-  app.get(`/:username/${posts}`, (req, res) => {
-    // URL found under responseObject.data.graphql.user.edge_owner_to_timeline_media.edges[0].node.display_url
+app.get('/:username/:post', async (req, res) => {
+  const { username, post } = req.params;
 
-    // Proxy the image request to the external URL
-    axios({
+  try {
+    const response = await axios({
       method: 'get',
-      url: userUrl[posts],
+      url: post,
       responseType: 'stream',
-    })
-      .then((response) => {
-        response.data.pipe(res);
+    });
 
-        // Save the image to a local file
-        const directoryPath = `posts/${userId}`;
-        const filePath = `${directoryPath}/${userId}${posts}.jpg`;
-        
-        // Create the directory if it doesn't exist
-        if (!fs.existsSync(directoryPath)) {
-          fs.mkdirSync(directoryPath);
-        }
-      
-        const writer = fs.createWriteStream(filePath);
-        response.data.pipe(writer);
-        writer.on('finish', () => {
-          console.log(`Image ${posts} from '@${userId}' saved locally.`);
-        });
-        writer.on('error', (err) => {
-          console.error('Error saving image:', err);
-        });
-        
-      })
-      .catch((error) => {
-        console.error('Error:', error);
-        res.status(500).send('Internal Server Error');
+    response.data.pipe(res);
+
+    const directoryPath = path.join(__dirname, `posts/${username}`);
+    const filePath = `${directoryPath}/${username}${post.slice(-23, -15)}.jpg`;
+
+
+    // Save images locally:
+
+    if (saveImagesLocally) {
+      // console.log(post);
+
+      if (!fs.existsSync(directoryPath)) {
+        fs.mkdirSync(directoryPath, { recursive: true });
+      }
+
+      const writer = fs.createWriteStream(filePath);
+      response.data.pipe(writer);
+      writer.on('finish', () => {
+        console.log(`Image ${post.slice(-23, -15)} from '@${username}' saved locally.`);
       });
-  });
-}
+      writer.on('error', (err) => {
+        console.error('Error saving image:', err);
+      });
+    }
+
+  } catch (error) {
+    console.error('Error:', error);
+    res.status(500).send('Internal Server Error');
+  }
+
+});
 
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
