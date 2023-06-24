@@ -11,6 +11,7 @@ const SearchResults = ({ username }) => {
   const [displayData, setDisplayData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [imageUrls, setImageUrls] = useState([]);
+  const [profilePic, setProfilePic] = useState('');
 
   useEffect(() => {
     const getResults = async () => {
@@ -19,7 +20,9 @@ const SearchResults = ({ username }) => {
       try {
         const response = await axios.get(`${endpoint}${username}`);
         setDisplayData(response.data);
-        setImageUrls(response.data.imageUrl);
+        setProfilePic(response.data.imageUrl[0]); // Profile pic in first position
+        setImageUrls(response.data.imageUrl.slice(1)); // Remove profile pic from array
+
       } catch (error) {
         console.log(error);
       } finally {
@@ -42,9 +45,9 @@ const SearchResults = ({ username }) => {
   return (
     <div>
       {imageUrls.map((imageUrl, index) => (
-        <div key={index}>
-          <ResultsHeader userHeader={username} />
-          <img src={`${baseUrl}/${username}/${encodeURIComponent(imageUrl)}`} alt={`${username} recent`} />
+        <div key={index} className="post-container">
+          <ResultsHeader userHeader={username} profilePicUrl={`${baseUrl}/${username}/${encodeURIComponent(profilePic)}`} />
+          <img className='post-image' src={`${baseUrl}/${username}/${encodeURIComponent(imageUrl)}`} alt={`${username} recent`} />
           <ResultsFooter />
           <br />
           <ResultsDivider />

@@ -37,6 +37,9 @@ app.get('/:username', async (req, res) => {
       i++;
     } while (i < 1);
 
+    // Locate Profile Picture and add to start of array
+    userUrl.push(data.graphql.user.profile_pic_url);
+
     // Go through and find all main posts
     for (let num of data.graphql.user.edge_owner_to_timeline_media.edges) {
       userUrl.push(num.node.display_url); // The main images are a part of the carousel
