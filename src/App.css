@@ -12,7 +12,6 @@
   color: white;
 }
 
-
 .profile-pic {
   width: 45px;
   height: 45px;
@@ -31,11 +30,10 @@
   max-width: 100%;
   object-fit: cover;
   position: relative;
-  
 }
 
 .ig-logo {
-  padding: 3%;
+  padding: 1.5%;
   width: calc(50px + 20vmin);
 }
 
@@ -99,14 +97,14 @@
   margin: 0;
 }
 
-.search-bar, .search-button {
+.search-bar, .search-button, .back-button {
   background: white;
   border: 0;
   padding: 0.63rem;
 }
 
 .search-bar {
-  width: 257px;
+  width: Calc(50px + 60vmin);
   max-width: 50%;
   color: black;
   border-bottom-left-radius: 10px;
@@ -114,6 +112,7 @@
 }
 
 .search-button {
+  width: 40px;
   background: white;
   border-bottom-right-radius: 10px;
   border-top-right-radius: 10px;
@@ -125,3 +124,28 @@
   object-fit: cover;
 }
 
+.search-navigation-container {
+  display: flex;
+  justify-content: center;
+  position: relative;
+}
+
+.search-bar-container {
+  position: absolute;
+}
+
+.navigation-bar {
+  margin-right: 94vmin;
+}
+
+.back-button {
+  width: Calc(40px);
+  background: white;
+  border-radius: 10px;
+}
+
+.back-button img {
+  width: 12px;
+  height: 12px;
+  object-fit: cover;
+}

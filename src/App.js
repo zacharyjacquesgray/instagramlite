@@ -2,6 +2,7 @@ import './App.css';
 import HeaderBar from './HeaderBar';
 import SearchBar from './SearchBar';
 import UserResults from './UserResults';
+import NavigationBar from './NavigationBar';
 import React, { useState } from 'react';
 
 function App() {
@@ -13,22 +14,25 @@ function App() {
   }
 
   return (
-    <div className='App'>
-      <header className='App-header' >
-        <HeaderBar />
-        <div>
+  <div className='App'>
+    <header className='App-header'>
+      <HeaderBar />
+      <div className="search-navigation-container">
+        <span className="search-bar-container">
           <SearchBar 
             onSearch={handleUsername}
             searchTitle='Search username'
           />
-          <br></br>
-          <UserResults username={username}/>
-        </div>
-        </header>
-    </div>
+        </span>
+        <NavigationBar />
+      </div>
+      <br />
+      <UserResults username={username}/>
+    </header>
+  </div>
+);
 
-
-  );
+  
 }
 
 export default App;
