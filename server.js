@@ -58,8 +58,6 @@ app.get('/:username', async (req, res) => {
           }
         }
       }
-      
-
     }
 
     responseObject = {
