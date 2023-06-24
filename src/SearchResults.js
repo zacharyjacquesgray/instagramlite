@@ -3,6 +3,7 @@ import axios from 'axios';
 import ResultsHeader from './results/ResultsHeader';
 import ResultsFooter from './results/ResultsFooter';
 import ResultsDivider from './results/ResultsDivider';
+import LoadingPost from './results/LoadingPost';
 
 const baseUrl = 'http://localhost:3000'; // Server URL
 const endpoint = baseUrl + '/';
@@ -34,7 +35,7 @@ const SearchResults = ({ username }) => {
   }, [username]);
 
   if (isLoading) {
-    return <p>Loading {username}...</p>;
+    return <LoadingPost userHeader={username} />
   }
 
   // Need to send this data back to user results to remove from array.
