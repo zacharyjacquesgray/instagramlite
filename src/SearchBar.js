@@ -7,7 +7,7 @@ const SearchBar = ({ onSearch, searchTitle = "Search..." }) => {
     const [shouldChangePlaceholder, setShouldChangePlaceholder] = useState(true);
     const intervalRef = useRef(null);
 
-    const exampleUsernames = ['jennierubyjane', 'lalalalisa_m', 'sooyaaa__', 'roses_are_rosie', 'blackpink'];
+    const exampleUsernames = ['jennierubyjane', 'lalalalisa_m', 'sooyaaa__', 'roses_are_rosie', 'blackpinkofficial'];
     const inputRef = useRef(null);
 
     const handleSearch = (e) => {

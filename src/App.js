@@ -6,7 +6,7 @@ import NavigationBar from './NavigationBar';
 import React, { useState } from 'react';
 
 function App() {
-  const [username, setUsername] = useState('jennierubyjane');
+  const [username, setUsername] = useState('oliviagrivas');
 
   const handleUsername = (usernameSearch) => {
     console.log('Search user: ' + usernameSearch);
@@ -32,7 +32,6 @@ function App() {
   </div>
 );
 
-  
 }
 
 export default App;

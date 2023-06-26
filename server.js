@@ -5,7 +5,7 @@ const fs = require('fs');
 const path = require('path');
 
 const app = express();
-const port = 3000;
+const port = 3001;
 
 const saveImagesLocally = false; // Adjust if you want a session where files are saved locally.
 
@@ -13,7 +13,7 @@ app.use(cors());
 
 app.get('/:username', async (req, res) => {
   const { username } = req.params;
-  const baseUrl = 'http://localhost:3000'; // Server URL
+  const baseUrl = `http://localhost:${port}`; // Server URL
   let moreImagesKey = '';
 
   try {

@@ -1,9 +1,14 @@
 import React from 'react';
 
 const HeaderBar = () => {
+
+    const reloadPage = () => window.location.reload(false);
+
     return (
-        <div>
-            <img className="ig-logo" src="/ig_logo.png" alt="Instagram Lite" />
+        <div className="ig-logo">
+            <a href="#" onClick={reloadPage}>
+                <img src="/ig_logo.png" alt="Instagram Lite" />
+            </a>
         </div>
     )
 }
