@@ -72,11 +72,11 @@
 
 .footer-rectangle {
   max-width: 100%;
-  height: 120px;
   margin-top: -10px;
   background: white;
   border-bottom-left-radius: 14px;
   border-bottom-right-radius: 14px; 
+  text-align:justify;
 }
 
 .divider-bar {
@@ -157,4 +157,44 @@
   width: 12px;
   height: 12px;
   object-fit: cover;
+}
+
+pre {
+  color:black;
+}
+
+.user-caption-container {
+  position: relative;
+  padding-left: 2.5%;
+  padding-right: 2.5%;
+}
+
+.post-caption, .username-caption {
+  display:inline-block;
+  white-space: pre-wrap;
+  color: black;
+  font-family: 'Roboto', sans-serif;
+  text-align: left;
+  font-size: 15px;
+  letter-spacing: 0.25pt;
+}
+
+.likes-caption {
+  color: black;
+  font-family: 'Roboto', sans-serif;
+  text-align: left;
+  position: relative;
+  left: 15px;
+  top: -20px;
+  bottom: 0px;
+  font-size: 15px;
+  letter-spacing: 0.25pt;
+}
+
+.like-h4 {
+  margin-bottom: -2px;
+}
+
+span {
+  display:inline-block;
 }

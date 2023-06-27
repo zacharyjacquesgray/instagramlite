@@ -26,7 +26,11 @@ app.get('/:username', async (req, res) => {
     let data = null;
     let responseObject = null;
     let searchUrl = instagramUrl + urlParams;
-    const userUrl = [];
+    let userUrl = [];
+    let captions = [];
+    let isVideos = [];
+    let likes = [];
+    let locations = [];
 
     do {
       console.log(searchUrl);
@@ -35,7 +39,7 @@ app.get('/:username', async (req, res) => {
       moreImagesKey = data.graphql.user.edge_owner_to_timeline_media.page_info.end_cursor;
       searchUrl = instagramUrl + endCursorParam + moreImagesKey + urlParams;
       i++;
-    } while (i < 1);
+    } while (i < 1); // If potentially can call more images
 
     // Locate Profile Picture and add to start of array
     userUrl.push(data.graphql.user.profile_pic_url);
@@ -43,6 +47,10 @@ app.get('/:username', async (req, res) => {
     // Go through and find all main posts
     for (let num of data.graphql.user.edge_owner_to_timeline_media.edges) {
       userUrl.push(num.node.display_url); // The main images are a part of the carousel
+      isVideos.push(num.node.is_video || false);
+      captions.push(num.node.edge_media_to_caption.edges[0]?.node.text || '');
+      likes.push(num.node.edge_liked_by.count || null);
+      locations.push(num.node.location || '');
 
       // Make an object to hold each of the carousel images. This way they can be displayed together.
 
@@ -55,6 +63,10 @@ app.get('/:username', async (req, res) => {
         for (let sidecar of num.node.edge_sidecar_to_children.edges) {
           if (sidecar.node.display_url !== num.node.display_url) {
             userUrl.push(sidecar.node.display_url);
+            isVideos.push(num.node.is_video || false);
+            captions.push(num.node.edge_media_to_caption.edges[0]?.node.text || '');
+            likes.push(num.node.edge_liked_by.count || null);
+            locations.push(num.node.location || '');
           }
         }
       }
@@ -63,7 +75,14 @@ app.get('/:username', async (req, res) => {
     responseObject = {
       data: data,
       imageUrl: userUrl,
+      name: data.graphql.user.full_name,
+      isVerified: data.graphql.user.is_verified,
+      isVideo: isVideos,
+      caption: captions,
+      likes: likes,
+      location: locations,
     };
+    console.log(responseObject.caption);
 
     res.json(responseObject);
   } catch (error) {
@@ -72,7 +91,7 @@ app.get('/:username', async (req, res) => {
   }
 });
 
-app.get('/:username/:post', async (req, res) => {
+app.get('/img/:username/:post', async (req, res) => {
   const { username, post } = req.params;
 
   try {

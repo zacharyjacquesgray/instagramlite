@@ -9,7 +9,7 @@ const LoadingPost = ({ userHeader }) => {
         <div className="post-container">
           <ResultsHeader userHeader={userHeader} profilePicUrl='loadingProfilePic.png' />
           <img className='post-image' src='loadingPost.png' alt={`Loading ${userHeader}...`} />
-          <ResultsFooter />
+          <ResultsFooter userHeader={userHeader} caption='' likes='     ' />
           <br />
         </div>
     );
