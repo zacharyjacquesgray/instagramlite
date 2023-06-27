@@ -1,58 +1,62 @@
-const express = require('express');
-const axios = require('axios');
-const cors = require('cors');
-const fs = require('fs');
-const path = require('path');
+const functions = require("firebase-functions");
+const express = require("express");
+const axios = require("axios");
+const cors = require("cors");
+const fs = require("fs");
+const path = require("path");
 
 const app = express();
-const port = 3001;
 
-const saveImagesLocally = false; // Adjust if you want a session where files are saved locally.
+const saveImagesLocally = false;
 
 app.use(cors());
 
-app.get('/:username', async (req, res) => {
-  const { username } = req.params;
-  const baseUrl = `http://localhost:${port}`; // Server URL
-  let moreImagesKey = '';
+app.get("/:username", async (req, res) => {
+  const {username} = req.params;
+  let moreImagesKey = "";
+
+  console.log('Request received');
 
   try {
     const instagramUrl = `https://www.instagram.com/${username}/?__a=1`;
-    const urlParams = '&__d=dis';
-    const endCursorParam = '&max_id=';
+    const urlParams = "&__d=dis";
+    const endCursorParam = "&max_id=";
 
     let i = 0;
     let response = null;
     let data = null;
     let responseObject = null;
     let searchUrl = instagramUrl + urlParams;
-    let userUrl = [];
-    let captions = [];
-    let isVideos = [];
-    let likes = [];
-    let locations = [];
+    const userUrl = [];
+    const captions = [];
+    const isVideos = [];
+    const likes = [];
+    const locations = [];
 
     do {
       console.log(searchUrl);
       response = await axios.get(searchUrl);
       data = response.data;
-      moreImagesKey = data.graphql.user.edge_owner_to_timeline_media.page_info.end_cursor;
+      const moreImagesUrl = data.graphql.user.edge_owner_to_timeline_media;
+      moreImagesKey = moreImagesUrl.page_info.end_cursor;
       searchUrl = instagramUrl + endCursorParam + moreImagesKey + urlParams;
       i++;
     } while (i < 1); // If potentially can call more images
 
     // Locate Profile Picture and add to start of array
     userUrl.push(data.graphql.user.profile_pic_url);
+    console.log('Profile pic URL: ' + data.graphql.user.profile_pic_url);
 
     // Go through and find all main posts
-    for (let num of data.graphql.user.edge_owner_to_timeline_media.edges) {
-      userUrl.push(num.node.display_url); // The main images are a part of the carousel
+    for (const num of data.graphql.user.edge_owner_to_timeline_media.edges) {
+      userUrl.push(num.node.display_url);
       isVideos.push(num.node.is_video || false);
-      captions.push(num.node.edge_media_to_caption.edges[0]?.node.text || '');
+      captions.push(num.node.edge_media_to_caption.edges[0].node.text || "");
       likes.push(num.node.edge_liked_by.count || null);
-      locations.push(num.node.location || '');
+      locations.push(num.node.location || "");
 
-      // Make an object to hold each of the carousel images. This way they can be displayed together.
+      // Make an object to hold each of the carousel images.
+      // This way they can be displayed together.
 
       // Go through and find all carousel images
       if (
@@ -64,9 +68,9 @@ app.get('/:username', async (req, res) => {
           if (sidecar.node.display_url !== num.node.display_url) {
             userUrl.push(sidecar.node.display_url);
             isVideos.push(num.node.is_video || false);
-            captions.push(num.node.edge_media_to_caption.edges[0]?.node.text || '');
+            captions.push(num.node.edge_media_to_caption.edges[0].node.text || "");
             likes.push(num.node.edge_liked_by.count || null);
-            locations.push(num.node.location || '');
+            locations.push(num.node.location || "");
           }
         }
       }
@@ -86,19 +90,19 @@ app.get('/:username', async (req, res) => {
 
     res.json(responseObject);
   } catch (error) {
-    console.error('Error:', error);
-    res.status(500).send('Internal Server Error');
+    console.error("Error:", error);
+    res.status(500).send("Internal Server Error");
   }
 });
 
-app.get('/img/:username/:post', async (req, res) => {
-  const { username, post } = req.params;
+app.get("/img/:username/:post", async (req, res) => {
+  const {username, post} = req.params;
 
   try {
     const response = await axios({
-      method: 'get',
+      method: "get",
       url: post,
-      responseType: 'stream',
+      responseType: "stream",
     });
 
     response.data.pipe(res);
@@ -106,33 +110,38 @@ app.get('/img/:username/:post', async (req, res) => {
     const directoryPath = path.join(__dirname, `posts/${username}`);
     const filePath = `${directoryPath}/${username}${post.slice(-23, -15)}.jpg`;
 
-
     // Save images locally:
 
     if (saveImagesLocally) {
       // console.log(post);
 
       if (!fs.existsSync(directoryPath)) {
-        fs.mkdirSync(directoryPath, { recursive: true });
+        fs.mkdirSync(directoryPath, {recursive: true});
       }
 
       const writer = fs.createWriteStream(filePath);
       response.data.pipe(writer);
-      writer.on('finish', () => {
+      writer.on("finish", () => {
         console.log(`Image ${post.slice(-23, -15)} from '@${username}' saved locally.`);
       });
-      writer.on('error', (err) => {
-        console.error('Error saving image:', err);
+      writer.on("error", (err) => {
+        console.error("Error saving image:", err);
       });
     }
-
   } catch (error) {
-    console.error('Error:', error);
-    res.status(500).send('Internal Server Error');
+    console.error("Error:", error);
+    res.status(500).send("Internal Server Error");
   }
-
 });
 
+//*************************/
+// For if we want to run the server locally
+const port = 3001;
+
+// Start the server on the specified port
 app.listen(port, () => {
-  console.log(`Server is running on http://localhost:${port}`);
+  console.log(`Server is running on port ${port}`);
 });
+// ************************/
+
+exports.api = functions.https.onRequest(app);

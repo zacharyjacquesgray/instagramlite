@@ -5,6 +5,7 @@ import ResultsFooter from './results/ResultsFooter';
 // import ResultsDivider from './results/ResultsDivider';
 import LoadingPost from './results/LoadingPost';
 
+//const baseUrl = 'https://us-central1-instagram-lite-cefae.cloudfunctions.net/api'; // Server URL
 const baseUrl = 'http://localhost:3001'; // Server URL
 const endpoint = baseUrl + '/';
 
